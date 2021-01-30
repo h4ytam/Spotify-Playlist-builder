@@ -1,22 +1,27 @@
-const my_client_id = "8d86a869399d49bca58688155f0ee7ea";
-const redirect_uri = "http://localhost:3000";
+import * as querystring from "querystring";
+const CLIENT_ID = "8d86a869399d49bca58688155f0ee7ea";
 
 export default (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.statusCode = 200;
-  let scopes = "user-read-private user-read-email";
-  res.redirect(
-    "https://accounts.spotify.com/authorize" +
-      "?response_type=code" +
-      "&client_id=" +
-      my_client_id +
-      (scopes ? "&scope=" + encodeURIComponent(scopes) : "") +
-      "&redirect_uri=" +
-      encodeURIComponent(redirect_uri)
-  );
-};
+  try {
+    const scope =
+      "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read playlist-modify-public playlist-modify-private";
 
-// export default (req, res) => {
-//   res.statusCode = 200;
-//   res.json({ name: "John Dosssse" });
-// };
+    const spotifyUrl =
+      "https://accounts.spotify.com/authorize?" +
+      querystring.stringify({
+        client_id: CLIENT_ID,
+        response_type: "code",
+        redirect_uri: "http://localhost:3000",
+        //state: state,
+        scope: scope,
+        show_dialog: false,
+      });
+
+    // Send back the redirect url provided by the code generated above.
+    res.status(200).json({ url: spotifyUrl });
+  } catch (error) {
+    console.error(error);
+    // Send back a 400 response to indicate a bad request
+    res.status(400);
+  }
+};
