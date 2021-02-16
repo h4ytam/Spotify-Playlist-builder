@@ -3,6 +3,17 @@ import styles from "../styles/Home.module.css";
 import { getAuthorizationCode, getToken } from "../lib/auth/authCodes";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import {
+  Container,
+  Button,
+  Typography,
+  Card,
+  CardActions,
+  CardMedia,
+  CardActionArea,
+  CardContent,
+} from "@material-ui/core";
+
 export default function Home() {
   const router = useRouter();
   const [items, setItems] = useState([]);
@@ -33,23 +44,72 @@ export default function Home() {
     setItems(artists);
     // console.log(items);
   };
-
+  const card = {
+    width: " 400px",
+    height: "300px",
+    marginTop: "20px",
+  };
+  const cardImg = {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "80%",
+    height: "180px",
+    marginTop: "12px",
+  };
+  const cardFlex = {
+    display: "flex",
+    flexWrap: "wrap",
+    height: "400px",
+    justifyContent: "space-between",
+  };
   return (
-    <div>
-      <h1>Spotify PLaylist generator</h1>
-      <button onClick={() => getAuthorizationCode(router)}>Login</button>
+    <Container>
+      <Typography variant="h3" component="h2">
+        Spotify PLaylist generator
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => getAuthorizationCode(router)}
+      >
+        Login
+      </Button>
       <hr />
-      <button onClick={() => getToken(router.query)}>Request a Token</button>
-      <button onClick={() => currently()}>Get Artits</button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => getToken(router.query)}
+      >
+        Request a Token
+      </Button>
+      <Button variant="contained" color="primary" onClick={() => currently()}>
+        Get Artits
+      </Button>
 
-      <div>
+      <div style={cardFlex}>
         {items.length
           ? items.map((artist) => {
-              console.log(artist.name);
-              return <h1>{artist.name}</h1>;
+              return (
+                <Card style={card}>
+                  <CardActionArea>
+                    <CardMedia
+                      style={cardImg}
+                      component="img"
+                      image={artist.image}
+                      title={artist.id}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {artist.name}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              );
             })
           : null}
       </div>
-    </div>
+    </Container>
   );
 }
