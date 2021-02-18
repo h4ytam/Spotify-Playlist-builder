@@ -1,5 +1,3 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { getAuthorizationCode, getToken } from "../lib/auth/authCodes";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -17,6 +15,10 @@ import {
 export default function Home() {
   const router = useRouter();
   const [items, setItems] = useState([]);
+  const search = async () => {
+    const token = localStorage.getItem("access_token");
+    const req = await fetch(`/api/getTopTracks`);
+  };
   const currently = async () => {
     const token = localStorage.getItem("access_token");
     // console.log(token);
@@ -66,7 +68,7 @@ export default function Home() {
   return (
     <Container>
       <Typography variant="h3" component="h2">
-        Spotify PLaylist generator
+        Spotify PLaylist top artists viewer
       </Typography>
       <Button
         variant="contained"
